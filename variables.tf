@@ -9,6 +9,6 @@ variable "repo" {
 }
 
 variable "members" {
-  type = set(string)
+  type        = set(string)
   description = "Those repo readers"
 }
