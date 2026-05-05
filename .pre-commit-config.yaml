@@ -58,7 +58,4 @@ repos:
     rev: v0.1.1
     hooks:
     -   id: ghat-go
-        args:
-        - swot
-        - -d
-        - .
+        args: ["swot", "-d" , "."]
