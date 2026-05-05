@@ -9,7 +9,7 @@
 module "reader" {
   source = "JamesWoolfenden/cluster/gcp"
   region = "europe-west2"
-  repo   = "pike-gcp"
+  repo   = "pike-477416"
   members = [
     "user:james.woolfenden@gmail.com",
   ]

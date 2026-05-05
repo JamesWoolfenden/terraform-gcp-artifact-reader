@@ -1,4 +1,3 @@
 provider "google" {
-  project = "pike-gcp"
-  //credentials = "/Users/jwoolfenden/pike-gcp-super.json"
+  project = "pike-477416"
 }
