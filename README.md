@@ -94,7 +94,7 @@ Please use the [issue tracker](https://github.com/jameswoolfenden/terraform-aws-
 
 ## Copyrights
 
-Copyright © 2023 James Woolfenden
+Copyright © 2026 James Woolfenden
 
 ## License
 
