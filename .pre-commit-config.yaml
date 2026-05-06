@@ -1,4 +1,4 @@
-default_language_version:
+﻿default_language_version:
     python: python3.11
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
@@ -59,3 +59,5 @@ repos:
     hooks:
     -   id: ghat-go
         args: ["swot", "-d" , "."]
+    -   id: ghat-go-sift
+        args: ["sift", "-d" , "."]
