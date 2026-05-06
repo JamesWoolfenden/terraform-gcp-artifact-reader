@@ -51,10 +51,10 @@ repos:
         entry: checkov -d example/examplea --external-checks-dir checkov --download-external-modules
             true --compact
 -   repo: https://github.com/jameswoolfenden/pike
-    rev: v0.4.1
+    rev: v0.4.2
     hooks:
     -   id: pike-docs-go
-        args: ["readme","-d", ".", "-i"]
+        args: ["readme","-d", ".", "-i", "--project", "pike-477416"]
 -   repo: https://github.com/jameswoolfenden/ghat
     rev: v0.1.27
     hooks:
