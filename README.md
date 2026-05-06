@@ -24,7 +24,7 @@ No requirements.
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_google"></a> [google](#provider\_google) | n/a |
 
 ## Modules
@@ -34,14 +34,14 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [google_artifact_registry_repository_iam_member.members](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/artifact_registry_repository_iam_member) | resource |
 | [google_artifact_registry_repository.repo](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/artifact_registry_repository) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_members"></a> [members](#input\_members) | Those repo readers | `set(string)` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Location for the app | `string` | n/a | yes |
 | <a name="input_repo"></a> [repo](#input\_repo) | Repository | `string` | n/a | yes |
