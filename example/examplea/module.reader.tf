@@ -1,10 +1,4 @@
-resource "google_artifact_registry_repository" "pike" {
-  #checkov:skip=CKV_GCP_84: example does not require CSEK encryption
-  location      = "europe-west2"
-  repository_id = "pike"
-  format        = "DOCKER"
-}
-
+# holden:ignore:HLD_TF_026 — examples intentionally use ../../ to reference the local module root
 module "reader" {
   source = "../../"
   region = "europe-west2"
