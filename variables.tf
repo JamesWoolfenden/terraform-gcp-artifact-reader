@@ -1,17 +1,26 @@
-variable "region" {
+variable "project" {
   type        = string
-  description = "Location for the app"
+  description = "Project the repository belongs to"
   validation {
-    condition     = length(var.region) > 0
-    error_message = "Region must be specified"
+    condition     = length(var.project) > 0
+    error_message = "Project must be specified"
   }
 }
 
-variable "repo" {
+variable "location" {
   type        = string
-  description = "Repository"
+  description = "Location of the repository"
   validation {
-    condition     = length(var.repo) > 0
+    condition     = length(var.location) > 0
+    error_message = "Location must be specified"
+  }
+}
+
+variable "repository" {
+  type        = string
+  description = "Repository name"
+  validation {
+    condition     = length(var.repository) > 0
     error_message = "Repository name must be specified"
   }
 }
@@ -22,5 +31,9 @@ variable "members" {
   validation {
     condition     = length(var.members) > 0
     error_message = "At least one member must be specified"
+  }
+  validation {
+    condition     = !contains(var.members, "allUsers") && !contains(var.members, "allAuthenticatedUsers")
+    error_message = "Public/anonymous members (allUsers, allAuthenticatedUsers) are not allowed"
   }
 }

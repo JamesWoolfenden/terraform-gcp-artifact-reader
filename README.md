@@ -7,9 +7,10 @@
 
 ```terraform
 module "reader" {
-  source = "JamesWoolfenden/cluster/gcp"
-  region = "europe-west2"
-  repo   = "pike-477416"
+  source     = "JamesWoolfenden/cluster/gcp"
+  project    = "my-project"
+  location   = "europe-west2"
+  repository = "pike-477416"
   members = [
     "user:james.woolfenden@gmail.com",
   ]
@@ -36,15 +37,15 @@ No modules.
 | Name | Type |
 | ---- | ---- |
 | [google_artifact_registry_repository_iam_member.members](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/artifact_registry_repository_iam_member) | resource |
-| [google_artifact_registry_repository.repo](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/artifact_registry_repository) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_location"></a> [location](#input\_location) | Location of the repository | `string` | n/a | yes |
 | <a name="input_members"></a> [members](#input\_members) | Those repo readers | `set(string)` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | Location for the app | `string` | n/a | yes |
-| <a name="input_repo"></a> [repo](#input\_repo) | Repository | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | Project the repository belongs to | `string` | n/a | yes |
+| <a name="input_repository"></a> [repository](#input\_repository) | Repository name | `string` | n/a | yes |
 
 ## Outputs
 
@@ -66,7 +67,6 @@ resource "google_project_iam_custom_role" "terraform_pike" {
   title       = "terraform_pike"
   description = "A user with least privileges"
   permissions = [
-    "artifactregistry.repositories.get",
     "artifactregistry.repositories.getIamPolicy",
     "artifactregistry.repositories.setIamPolicy"
   ]
