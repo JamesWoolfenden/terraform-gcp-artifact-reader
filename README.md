@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/JamesWoolfenden/terraform-gcp-artifact-reader/workflows/Verify/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-gcp-artifact-reader)
 [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-gcp-artifact-reader.svg)](https://github.com/JamesWoolfenden/terraform-gcp-artifact-reader/releases/latest)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![pre-commit](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
 ```terraform
 module "reader" {
@@ -51,7 +50,7 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_reader"></a> [reader](#output\_reader) | The artifact reader module output |
+| <a name="output_reader"></a> [reader](#output\_reader) | The artifact readers |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Role and Permissions
@@ -60,7 +59,7 @@ No modules.
 The Terraform resource required is:
 
 ```golang
-
+# apply role
 resource "google_project_iam_custom_role" "terraform_pike" {
   project     = "pike-477416"
   role_id     = "terraform_pike"
@@ -69,6 +68,17 @@ resource "google_project_iam_custom_role" "terraform_pike" {
   permissions = [
     "artifactregistry.repositories.getIamPolicy",
     "artifactregistry.repositories.setIamPolicy"
+  ]
+}
+
+# plan role
+resource "google_project_iam_custom_role" "terraform_pike_plan" {
+  project     = "pike-477416"
+  role_id     = "terraform_pike_plan"
+  title       = "terraform_pike_plan"
+  description = "A user with least privileges"
+  permissions = [
+    "artifactregistry.repositories.getIamPolicy"
   ]
 }
 

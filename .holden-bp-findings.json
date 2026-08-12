@@ -1,0 +1,29 @@
+{
+  "findings": [
+    {
+      "confidence": "high",
+      "explanation": "The cleanup_policies block (id \"DELETE-TAGGED\") has action = \"DELETE\" and a condition that only checks tag_state = \"TAGGED\", with no older_than/newer_than bound. Artifact Registry cleanup runs periodically and will match and delete every tagged image the moment this policy is active \u2014 including images currently deployed \u2014 since there's no age or version-count restriction narrowing the match. holden's existing HLD_GCP_341 only checks that a cleanup_policies block exists, so it doesn't catch this: the block is present, but its DELETE condition is unbounded. Because this file lives under example/, it's also the reference pattern anyone copies when wiring up a real repository.",
+      "file": "example/examplea/google_artifact_registry_repository.tf",
+      "first_seen": "2026-08-12",
+      "fix": "  cleanup_policies {\n    id     = \"DELETE-TAGGED\"\n    action = \"DELETE\"\n    condition {\n      tag_state  = \"TAGGED\"\n      older_than = \"2592000s\"\n    }\n  }",
+      "fixable": true,
+      "id": "HOLDEN_BP_001",
+      "last_seen": "2026-08-12",
+      "line": 11,
+      "principle": "reliability",
+      "remediation": "Add an older_than (or newer_than) bound to the DELETE condition so only stale tagged images are removed, e.g. older_than = \"2592000s\" (30 days). If the intent really is to delete every tagged image unconditionally, that's unusual enough to warrant a comment explaining why.",
+      "resource": "google_artifact_registry_repository.pike",
+      "severity": "MEDIUM",
+      "status": "open",
+      "title": "Cleanup policy deletes all tagged artifacts with no age/version bound"
+    }
+  ],
+  "scan_date": "2026-08-12T00:00:00Z",
+  "scan_path": ".",
+  "suggested_policies": [
+    {
+      "rationale": "holden's HLD_GCP_341 only verifies a cleanup_policies block exists on google_artifact_registry_repository; it doesn't check that a DELETE action is scoped by age or version count. A DELETE policy with only a tag_state condition matches every artifact in that state unconditionally, which is a real production footgun (this repo's own example/ ships exactly that pattern) and is unambiguous to detect structurally.",
+      "yaml": "id: HLD_GCP_514\nname: Artifact Registry DELETE cleanup policies must be scoped by age or version count\ncloud: gcp\nprinciple: reliability\nseverity: MEDIUM\nrationale: |\n  A cleanup_policies entry with action DELETE and only a tag_state/tag_prefixes\n  condition (no older_than/newer_than) matches every artifact in that state\n  immediately, deleting actively-deployed images the moment the cleanup job\n  next runs. This can break rollbacks and redeploys with no warning.\nmessage: |\n  cleanup_policies action DELETE has no older_than/newer_than condition, so it\n  deletes every matching artifact regardless of age.\nremediation: |\n  Add an age-based bound to the DELETE condition, e.g.:\n\n    cleanup_policies {\n      id     = \"delete-old-tagged\"\n      action = \"DELETE\"\n      condition {\n        tag_state  = \"TAGGED\"\n        older_than = \"2592000s\" # 30 days\n      }\n    }\nresources:\n  google_artifact_registry_repository:\n    path: cleanup_policies\n    not_any:\n      all:\n        - path: action\n          equals: DELETE\n        - path: condition.older_than\n          absent: true\n        - path: condition.newer_than\n          absent: true\n"
+    }
+  ]
+}

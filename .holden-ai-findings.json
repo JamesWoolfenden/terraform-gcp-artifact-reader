@@ -1,0 +1,36 @@
+{
+  "findings": [
+    {
+      "confidence": "medium",
+      "explanation": "The second validation block on var.members rejects only the literal strings allUsers and allAuthenticatedUsers. A member value of the form domain:example.com is not caught by this check or by HLD_GCP_024 (which uses the same not_one_of [allUsers, allAuthenticatedUsers] condition), yet it grants read access to every user in that Google Workspace (or consumer Gmail) domain \u2014 a blast radius that scales with the domain's user count and is easy to introduce by mistake (e.g. a `user:` grant missing its prefix, or copy-pasting a domain-wide grant from another module). Neither the deterministic engine nor this module's own defense-in-depth validation can catch it because it's a graph-independent, single-attribute string check with no enumerable 'safe' set \u2014 a domain: grant is sometimes intentional (internal company-wide registries) and sometimes a mistake, which is why this needs a human decision rather than an auto-fix.",
+      "file": "variables.tf",
+      "first_seen": "2026-08-12",
+      "fixable": false,
+      "id": "HOLDEN_AI_001",
+      "last_seen": "2026-08-12",
+      "line": 35,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "google_artifact_registry_repository_iam_member.members"
+      ],
+      "remediation": "Decide whether domain: principals should be allowed for this module. If not, extend the validation condition to also reject them, e.g. add `&& !anytrue([for m in var.members : startswith(m, \"domain:\")])`. If domain-wide grants are intentionally supported, document that in the variable description so it's clear the omission is deliberate.",
+      "resource": "variable.members",
+      "severity": "MEDIUM",
+      "status": "suppressed",
+      "suppression_reason": "User decision (2026-08-12): validation hardening of variables.tf is not the focus of this module. Left as-is; HLD_GCP_515 (now shipped) still flags domain: grants for any consumer at scan time.",
+      "title": "members validation blocks the two public sentinels but not domain-wide grants"
+    }
+  ],
+  "scan_date": "2026-08-12T00:00:00Z",
+  "scan_path": ".",
+  "suggested_policies": [
+    {
+      "rationale": "coverage_by_type[google_artifact_registry_repository_iam_member] has 3 entries (HLD_GCP_024, HLD_GCP_210, HLD_GCP_450) and none of them inspect the member attribute for a domain: prefix \u2014 HLD_GCP_024 only rejects the two universal sentinels (allUsers, allAuthenticatedUsers). A domain: grant is a distinct, unambiguous, structurally-detectable pattern (a string prefix match on member) that's broadly applicable to any Terraform using this resource type, not just this repo. Severity is kept LOW/advisory rather than a hard fail because domain-wide grants are a legitimate choice for some internal registries \u2014 this is a review flag, not a ban.",
+      "shipped_as": "HLD_GCP_515",
+      "shipped_commit": "https://github.com/JamesWoolfenden/holden/commit/6ab8bae",
+      "status": "implemented",
+      "yaml": "id: HLD_GCP_515\nname: Artifact Registry IAM bindings granting domain-wide access should be reviewed\nprinciple: identity-and-access\nseverity: LOW\nrationale: |\n  A `domain:` principal in an Artifact Registry IAM member grants repository\n  access to every user of an entire Google Workspace (or consumer Gmail)\n  domain. Unlike a scoped user/group/service-account grant, the blast radius\n  scales with the domain's user count and is easy to add by mistake (e.g. a\n  `user:` grant missing its prefix). holden's existing HLD_GCP_024 only\n  rejects the two universal sentinel principals (allUsers,\n  allAuthenticatedUsers) and does not flag domain: grants, which can be\n  nearly as broad depending on the domain.\nremediation: |\n  Confirm the domain-wide grant is intentional. If narrower access is\n  sufficient, replace it with specific user:, group:, or serviceAccount:\n  principals:\n\n    resource \"google_artifact_registry_repository_iam_member\" \"readers\" {\n      member = \"group:artifact-readers@example.com\"\n      # ...\n    }\nresources:\n  google_artifact_registry_repository_iam_member:\n    path: member\n    not_matches: \"^domain:\"\n"
+    }
+  ],
+  "suggested_suppressions": []
+}
