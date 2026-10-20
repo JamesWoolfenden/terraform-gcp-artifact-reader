@@ -6,7 +6,7 @@
 
 ```terraform
 module "reader" {
-  source     = "JamesWoolfenden/cluster/gcp"
+  source     = "JamesWoolfenden/artifact-reader/gcp"
   project    = "my-project"
   location   = "europe-west2"
   repository = "pike-477416"
@@ -96,13 +96,13 @@ Check out these related projects.
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/jameswoolfenden/terraform-aws-cluster/issues).
+File a GitHub [issue](https://github.com/jameswoolfenden/terraform-gcp-artifact-reader/issues).
 
 ## Contributing
 
 ### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/jameswoolfenden/terraform-aws-cluster/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/jameswoolfenden/terraform-gcp-artifact-reader/issues) to report any bugs or file feature requests.
 
 ## Copyrights
 
