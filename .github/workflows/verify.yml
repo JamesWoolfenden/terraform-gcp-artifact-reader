@@ -18,5 +18,3 @@ jobs:
 # holden:ignore:HLD_CI_017:By Design
   verify:
     uses: JamesWoolfenden/.github/.github/workflows/terraform-verify-gcp.yml@main
-    with:
-      service_account: terraform-gcp-artifact-reader@pike-477416.iam.gserviceaccount.com
